@@ -54,7 +54,7 @@ module Export
             xml.offers { # список товаров
               products = Spree::Product.active.master_price_gte(0.001)
               products = products.on_hand if @config.preferred_wares == "on_hand"
-              products = products.where(:export_to_yandex_market => true).group_by_products_id
+              products = products.where(:export_to_yandex_market => true).group('spree_products.id')
               products.each do |product|
                 offer(xml, product, product.taxons.first) unless product.taxons.empty?
               end
@@ -129,7 +129,7 @@ module Export
     def offer_simple(xml, product, cat)
       product_properties = { }
       product.product_properties.map {|x| product_properties[x.property_name] = x.value }
-      opt = { :id => product.id,  :available => (@config.preferred_only_backorder ? false : product.has_stock?) }
+      opt = { :id => product.id,  :available => (@config.preferred_only_backorder ? false : product.available?) }
       xml.offer(opt) {
         shared_xml(xml, product, cat)
         xml.delivery            true if not @config.preferred_without_order_form

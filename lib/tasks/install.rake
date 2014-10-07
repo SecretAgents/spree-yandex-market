@@ -1,26 +1,27 @@
 namespace :spree_yandex_market do
-  desc "Copies all migrations and assets (NOTE: This will be obsolete with Rails 3.1)"
+  desc "Copies all migrations and runs them"
   task :install do
-    Rake::Task['spree_yandex_market:install:migrations'].invoke
-    Rake::Task['spree_yandex_market:install:assets'].invoke
+    Rake::Task['spree_yandex_market:install:add_migrations'].invoke
+    Rake::Task['spree_yandex_market:install:run_migrations'].invoke
   end
 
   namespace :install do
-    desc "Copies all migrations (NOTE: This will be obsolete with Rails 3.1)"
-    task :migrations do
-      source = File.join(File.dirname(__FILE__), '..', '..', 'db')
-      destination = File.join(Rails.root, 'db')
-      puts "INFO: Mirroring assets from #{source} to #{destination}"
-      Spree::FileUtilz.mirror_files(source, destination)
+
+    desc "Copies all migrations"
+    task :add_migrations do
+      run 'bundle exec rake railties:install:migrations FROM=spree_blogging_spree'
     end
 
-    desc "Copies all assets (NOTE: This will be obsolete with Rails 3.1)"
-    task :assets do
-      source = File.join(File.dirname(__FILE__), '..', '..', 'public')
-      destination = File.join(Rails.root, 'public')
-      puts "INFO: Mirroring assets from #{source} to #{destination}"
-      Spree::FileUtilz.mirror_files(source, destination)
+    desc "Runs all migrations"
+    task :run_migrations do
+      run_migrations = options[:auto_run_migrations] || ['', 'y', 'Y'].include?(ask 'Would you like to run the migrations now? [Y/n]')
+      if run_migrations
+        run 'bundle exec rake db:migrate'
+      else
+        puts 'Skipping rake db:migrate, don\'t forget to run it!'
+      end
     end
+
   end
 
 end

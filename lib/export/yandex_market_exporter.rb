@@ -16,8 +16,12 @@ module Export
       @config = Spree::YandexMarket::Config
       @host = @config.preferred_url.sub(%r[^http://],'').sub(%r[/$], '')
       ActionController::Base.asset_host = @config.preferred_url
-      
-      @currencies = @config.preferred_currency.split(';').map{|x| x.split(':')}
+
+      @currencies = [['RUR']]
+      begin
+        @currencies = @config.preferred_currency.split(';').map{|x| x.split(':')} unless @config.preferred_currency.blank?
+      rescue
+      end
       @currencies.first[1] = 1
       
       # Nokogiri::XML::Builder.new({ :encoding =>"utf-8"}, SCHEME) do |xml|

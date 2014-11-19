@@ -14,7 +14,7 @@ class Spree::YandexMarketConfiguration < Spree::Preferences::Configuration
   preference :type_prefix,     :string, :default => "prefix"   # Группа товаров \ категория
   preference :vendor,          :string, :default => "vendor"        # Производитель
   preference :model,           :string, :default => "model"         # Модель
-  preference :vendor_code,     :string,  :default => "vendor_code"  # Код товара (указывается код производителя)
+  preference :vendor_code,     :string,  :default => "partnomer"  # Код товара (указывается код производителя)
   preference :country_of_manufacturer, :string, :default => "country_of_manufacturer" #страны производства товара.
   preference :manufacturer_warranty, :string, :default => "manufacturer_warranty" # есть официальная гарантию производителя.
   preference :wares_type,      :string, :default => "wares_type"   # Тип Товара
